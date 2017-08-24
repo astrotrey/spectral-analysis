@@ -1,53 +1,34 @@
 #! /usr/bin/env python 
 #
 # NAME:
-#   moog_write_abd.py
+#   modify_abd.py
 #
 # PURPOSE:
-#   Read in a moog output file, and comment out the
-#   lines with non-numerical data.
+#   Read in a file with a record of the chemical abundance
+#   for each spectral line, and comment out the
+#   rows with non-numerical data.
 #
 # CALLING SEQUENCE:
 #
-# ./write_moog_abd.py moog_abd_file outfile
+# ./modify_abd.py input_filepath output_filepath
 #
 #
 import math
 import sys
 
-file = sys.argv[1]
-outfile = sys.argv[2]
+input_filepath = sys.argv[1]
+output_filepath = sys.argv[2]
+
+
+fid = open(input_filepath,'r')
+data = fid.read()
+lines = data.split('\n')
+fid.close()
 
 
 #-Add a '#' to the start of each
 #-line of text in the input file
 #-
-fid = open(file,'r')
-data = fid.read()
-lines = data.split('\n')
-
-fid = open(outfile,'w')
-form = '%1s\n'
-fid.write(form % ('#'))
-
-for line in lines:
-
-        fid = open(outfile,'a')
-        fid.write('# '+line+'\n')
-
-
-
-#-Strip off the '#' for 
-#-the lines with numerical data
-#-
-fid = open(outfile,'r')
-data = fid.read()
-lines = data.split('\n')
-
-fid = open(outfile,'w')
-form = '%1s\n'
-fid.write(form % ('#'))
-
 for line in lines:
 
 	columns = line.split()
@@ -61,15 +42,14 @@ for line in lines:
 	   col6 = float(columns[6])
 	   col7 = float(columns[7])
 
-           fid = open(outfile,'a')
+           fid = open(output_filepath,'a')
            form='%10.2f %7.2f %10.3f %7.1f %8.2f %7.2f %8.2f \n'
 	   fid.write(form % (col1,col2,col3,col4,col5,col6,col7))
+           fid.close()
 	   
 	except IndexError:
 	   continue 
 	except ValueError:
-           fid = open(outfile,'a')
-	   fid.write(line+'\n')
-
-
-#END OF PROGRAM
+           fid = open(output_filepath,'a')
+	   fid.write('# '+line+'\n')
+           fid.close()
