@@ -18,11 +18,10 @@ def get_elem_name(elem_number):
     """
 
     # Currently supports only neutral and singly ionized iron
+    elem_name='Fe'
     if (elem_number != 26.1):
-        elem_name='Fe'
         elem_ion='I'
     else:
-        elem_name='Fe'
         elem_ion='II'
     return elem_name, elem_ion
 
