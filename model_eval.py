@@ -60,13 +60,19 @@ def check_model(data1_filepath, data2_filepath, param_filepath):
     star2_wave, star2_elem_num, star2_ep, star2_ew, star2_rew, star2_logN =\
                 read_datafile(datat2_filepath)
 
+
+    # You only need one of these statements, not both. Pick one.
     if len(star1_wave) != len(star2_wave):
        print '\nERROR: The two input data files are not the same length!\n'
        exit()
-
     if star1_wave != star2_wave:
        print '\nERROR! The spectral line data from the two input files are not identical\n'
        exit()
+
+    # Use numpy to calculate the averages and correlation coefficients.
+
+    # Is subprocess really needed to delete the files when the model is not a good
+    # fit to the data?
 
 
 if __name__ == '__main__':
