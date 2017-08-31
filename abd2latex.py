@@ -69,8 +69,8 @@ def reformat_files(datafile1_path, datafile2_path, output_path):
                                                data2_logN[ix]))
     outtext = '\n'.join(out_lines)
     if output_path == sys.stdout:
-       #- add a newline character to the end of the outttext
-       #- string to make the terminal output nicer
+       # Add a newline character to the end of the outtext
+       # string to make the terminal output cleaner.
        output_path.write(outtext+'\n')
     else:
        with open(output_path, 'w') as f:
