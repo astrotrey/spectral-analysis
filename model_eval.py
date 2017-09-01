@@ -92,10 +92,10 @@ def check_model(data1_filepath, data2_filepath, param_filepath):
             star2_fe2_logN.append(star2_logN[ix])
 
     # Evaluate how well the model fits the data.
-    # The model is considered a solution if it fits the data well enough,
+    # The model is considered a solution if it fits the data
     # such that:
     #      1) star1_fe1_avg - star1_fe2_avg = 0.00
-    #             The Fe-I and Fe-II abundances should agree when rounded
+    #             The mean Fe-I and Fe-II relative abundances should agree when rounded
     #             to the nearest hundredth.
     #      2) fe1_vs_ep < 0.01 
     #             The correlation coefficient for star1_fe1 vs star1_fe1_ep
@@ -104,14 +104,14 @@ def check_model(data1_filepath, data2_filepath, param_filepath):
     #             The correlation coefficient for star1_fe1 vs star1_fe1_rew
     #             must be less than 0.01 (no rounding!)
     #
-    star1_fe1 = np.subtract(star1_fe1_logN, star2_fe1_logN)  # Fe-I relative abundances of star1
-                                                             # relative to star2
+    star1_fe1 = np.subtract(star1_fe1_logN, star2_fe1_logN)  # Fe-I abundances of star1
+                                                             #      relative to star2
     star1_fe1_avg = np.mean(star1_fe1)                       # Fe-I mean relative abundance
     print star1_fe1
     print star1_fe1_avg
 
-    star1_fe2 = np.subtract(star1_fe2_logN, star2_fe2_logN)  # Fe-II relative abundances of star1
-                                                             # relative to star2
+    star1_fe2 = np.subtract(star1_fe2_logN, star2_fe2_logN)  # Fe-II abundances of star1
+                                                             #       relative to star2
     star1_fe2_avg = np.mean(star1_fe2)                       # Fe-II mean relative abundance
     print star1_fe2
     print star1_fe2_avg
