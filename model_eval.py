@@ -159,12 +159,9 @@ n_Fe2 = float(sys.argv[12])
 star_file_mod = (sys.argv[13]) #starfile deleted if parameters are not a solution
 star_log = (sys.argv[14]) #starlog deleted if parameters are not a solution
 star_model = (sys.argv[15]) #starmodel deleted if parameters are not a solution
-
-
 logfile3 = 'soluxns.log'
 logfile4 = 'soluxns_almost.log'
 fid1 = open(logfile2,'w')
-
 
 #- Also count the number of lines
 #- measured for each element
@@ -173,115 +170,16 @@ elem_strs = [0,0]
 elem_n_lines = [n_Fe1,n_Fe2]
 
 
-star_Fe1s = [0,0]
-star_Fe1_avg = 0
-star_Fe1_ep_avg = 0
-star_Fe1_ew_avg = 0
-star_Fe1_rew_avg = 0
-star_Fe2_avg = 0
-star_Fe2_ep_avg = 0
-star_Fe2_ew_avg = 0
-i = 0
-j = 0 #say what you're initiating for each of these
-for elem in star_lambdas:
-    
-
-	  if j < elem_n_lines[0]:
-
-	      star_Fe1_lambda = star_lambdas[j]
-	      star_Fe1_ep = star_eps[j]
-	      star_Fe1_ew = star_ews[j]
-	      star_Fe1_rew = star_rews[j]
-	      star_N_Fe1 = star_logNs[j]
-
-	      sun_Fe1_lambda = sun_lambdas[j]
-	      sun_Fe1_ep = sun_eps[j]
-	      sun_Fe1_ew = sun_ews[j]
-	      sun_Fe1_rew = sun_rews[j]
-	      sun_N_Fe1 = sun_logNs[j]
-              
-	      #-compute sums for avgs of [Fe1/H],
-	      #-Fe1_ep,Fe1_rew for correlation
-	      #-coefficients
-              #-
-              star_Fe1 = star_N_Fe1-sun_N_Fe1
-
-	      if i < 2:
-
-		 star_Fe1s[i] = star_Fe1
-
-	      else:
-
-		 star_Fe1s.append(star_Fe1)
-
-	      star_Fe1_avg = star_Fe1_avg + star_Fe1
-	      star_Fe1_ep_avg = star_Fe1_ep_avg + star_Fe1_ep
-	      star_Fe1_ew_avg = star_Fe1_ew_avg + star_Fe1_ew
-	      star_Fe1_rew_avg = star_Fe1_rew_avg + star_Fe1_rew
-              
-	      lambda1=star_Fe1_lambda
-	      lambda2=sun_Fe1_lambda
-	      logN1=star_N_Fe1
-	      logN2=sun_N_Fe1
-
-
-              if (logfile2 != 'foo.log'):
-		 fid1=open(logfile2,'a')
-                 #-print format for python 2.5 or lower
-	         form='%7.2f  %9.2f %7.2f %7.2f %7.2f\n' 
-	         fid1.write(form % (lambda1,lambda2,logN1,logN2,star_Fe1))
-
-          else:
-
-	      star_Fe2_lambda = star_lambdas[j]
-	      star_Fe2_ep = star_eps[j]
-	      star_Fe2_ew = star_ews[j]
-	      star_Fe2_rew = star_rews[j]
-	      star_N_Fe2 = star_logNs[j]
-
-	      sun_Fe2_lambda = sun_lambdas[j]
-	      sun_Fe2_ep = sun_eps[j]
-	      sun_Fe2_ew = sun_ews[j]
-	      sun_Fe2_rew = sun_rews[j]
-	      sun_N_Fe2 = sun_logNs[j]
-
-              star_Fe2 = star_N_Fe2-sun_N_Fe2
-	      star_Fe2_avg = star_Fe2_avg + star_Fe2
-	      star_Fe2_ep_avg = star_Fe2_ep_avg + star_Fe2_ep
-	      star_Fe2_ew_avg = star_Fe2_ew_avg + star_Fe2_ew
-
-	      lambda1=star_Fe2_lambda
-	      lambda2=sun_Fe2_lambda
-	      logN1=star_N_Fe2
-	      logN2=sun_N_Fe2
-
               if (logfile2 != 'foo.log'):
 	          form='%7.2f  %9.2f %7.2f %7.2f %7.2f\n' 
 	          fid1.write(form % (lambda1,lambda2,logN1,logN2,star_Fe2))
-
-        
-          j=j+1
-          i=i+1
-
-
-star_Fe1_avg = star_Fe1_avg/elem_n_lines[0]
-star_Fe2_avg = star_Fe2_avg/elem_n_lines[1]
-mean_Fe1_ep = star_Fe1_ep_avg/elem_n_lines[0]
-mean_Fe1_ew = star_Fe1_ew_avg/elem_n_lines[0]
-mean_Fe1_rew = star_Fe1_rew_avg/elem_n_lines[0]
-mean_Fe2_ep = star_Fe2_ep_avg/elem_n_lines[1]
-mean_Fe2_ew = star_Fe2_ew_avg/elem_n_lines[1]
-
-diff = abs(star_Fe1_avg-star_Fe2_avg)
-
+      
 if (logfile2 != 'foo.log'):
    fid1.write(' \n')
    fid1.write('[FeI/H] = %6.3f\n' % (star_Fe1_avg))
    fid1.write('[FeII/H] = %6.3f\n' % (star_Fe2_avg))
-
    form='|[FeI/H]-[FeII/H]| = %6.3f\n'
    fid1.write(form % (diff))
-
 
 #-Check if abs([Fe1/H] - [Fe2/H]) < 0.005
 #-when [Fe1/H] and [FeII/H] are rounded to
@@ -311,51 +209,11 @@ diff_Fe1Fe2 = Fe1 - Fe2
 #-
 #-Also do EW vs EP if ew_corr==1
 #
-j=0
-mean_star_Fe1=star_Fe1_avg
-mean_star_Fe2=star_Fe2_avg
-sum_Fe1xEP=0
-sum_Fe1xREW=0
-sum_REWxREW=0
-sum_Fe1xFe1=0
-sum_EWxEW_Fe1=0
-sum_EWxEP_Fe1=0
-sum_EWxEW_Fe2=0
-sum_EPxEP_Fe1=0
-sum_EWxEP_Fe2=0
-sum_EPxEP_Fe2=0
-for elem in star_ews:
-
-      if j < elem_n_lines[0]:
-
-             sum_EPxEP_Fe1 = sum_EPxEP_Fe1 + (star_eps[j]-mean_Fe1_ep)**2
-             sum_Fe1xEP = sum_Fe1xEP + (star_eps[j]-mean_Fe1_ep)*(star_Fe1s[j]-mean_star_Fe1)
-             sum_REWxREW = sum_REWxREW + (star_rews[j]-mean_Fe1_rew)**2
-             sum_Fe1xREW = sum_Fe1xREW + (star_rews[j]-mean_Fe1_rew)*(star_Fe1s[j]-mean_star_Fe1)
-             sum_Fe1xFe1 = sum_Fe1xFe1 + (star_Fe1s[j]-mean_star_Fe1)**2
-             sum_EWxEW_Fe1 = sum_EWxEW_Fe1 + (star_ews[j]-mean_Fe1_ew)**2
-             sum_EWxEP_Fe1 = sum_EWxEP_Fe1 + (star_ews[j]-mean_Fe1_ew)*(star_eps[j]-mean_Fe1_ep)
-
-      else:
-
-             sum_EPxEP_Fe2 = sum_EPxEP_Fe2 + (star_eps[j]-mean_Fe2_ep)**2
-             sum_EWxEW_Fe2 = sum_EWxEW_Fe2 + (star_ews[j]-mean_Fe2_ew)**2
-             sum_EWxEP_Fe2 = sum_EWxEP_Fe2 + (star_ews[j]-mean_Fe2_ew)*(star_eps[j]-mean_Fe2_ep)
-
-      j = j+1
-
-
-
-r_Fe1vsEP = sum_Fe1xEP/math.sqrt(sum_Fe1xFe1*sum_EPxEP_Fe1)
-r_Fe1vsREW = sum_Fe1xREW/math.sqrt(sum_Fe1xFe1*sum_REWxREW)
-r_EWvsEP_Fe1 = sum_EWxEP_Fe1/math.sqrt(sum_EWxEW_Fe1*sum_EPxEP_Fe1)
-
 if ew_corr == 1:
  
    fid1.write(' \n')
    form = 'Pearson corr. coeff. of EW vs EP for Fe1 = %.4f\n'
    fid1.write(form % (r_EWvsEP_Fe1))
-
 
 outfile=logfile
 fid2=open(outfile,'a')
