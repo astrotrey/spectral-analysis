@@ -69,7 +69,58 @@ def check_model(data1_filepath, data2_filepath, param_filepath):
        print 'Check '+data1_filepath+' to '+data2_filepath+' make sure they are the correct files.\n'
        exit()
 
-    # Use numpy to calculate the averages and correlation coefficients.
+    star1_fe1_ep = []   # ep, ew, and rew needed for statistics that
+                        # determine how well the model fits the data.
+                        # But only needed for star1 and Fe-I.
+    star1_fe1_ew = []
+    star1_fe1_rew = []
+    star1_fe1_logN = []
+    star1_fe2_logN = [] # Only need the absolute abundances of Fe-II
+                        # from the 1st star.
+    star2_fe1_logN = [] # 2nd star is reference; only need Fe-I and Fe-II logNs
+    star2_fe2_logN = [] # So Yeah: why read it in if you don't need it? Edit read_datafile()??
+    for ix, wave_item in enumerate(star1_wave):
+        #elem_name, elem_ion = get_elem_name(star1_elem_num[ix]) #might use this in a later version
+        if (star1_elem_num[ix] != 26.1):
+            star1_fe1_ep.append(star1_ep[ix])
+            star1_fe1_ew.append(star1_ew[ix])
+            star1_fe1_rew.append(star1_rew[ix])
+            star1_fe1_logN.append(star1_logN[ix])
+            star2_fe1_logN.append(star2_logN[ix])
+        else:
+            star1_fe2_logN.append(star1_logN[ix])
+            star2_fe2_logN.append(star2_logN[ix])
+
+    # Evaluate how well the model fits the data.
+    # The model is considered a solution if it fits the data well enough,
+    # such that:
+    #      1) star1_fe1_avg - star1_fe2_avg = 0.00
+    #             The Fe-I and Fe-II abundances should agree when rounded
+    #             to the nearest hundredth.
+    #      2) fe1_vs_ep < 0.01 
+    #             The correlation coefficient for star1_fe1 vs star1_fe1_ep
+    #             must be less than 0.01 (no rounding!)
+    #      3) fe1_vs_rew < 0.01
+    #             The correlation coefficient for star1_fe1 vs star1_fe1_rew
+    #             must be less than 0.01 (no rounding!)
+    #
+    star1_fe1 = np.subtract(star1_fe1_logN, star2_fe1_logN)  # Fe-I relative abundances of star1
+                                                             # relative to star2
+    star1_fe1_avg = np.mean(star1_fe1)                       # Fe-I mean relative abundance
+    print star1_fe1
+    print star1_fe1_avg
+
+    star1_fe2 = np.subtract(star1_fe2_logN, star2_fe2_logN)  # Fe-II relative abundances of star1
+                                                             # relative to star2
+    star1_fe2_avg = np.mean(star1_fe2)                       # Fe-II mean relative abundance
+    print star1_fe2
+    print star1_fe2_avg
+        
+    fe1_vs_ep = np.corrcoef(star1_fe1, star1_fe1_ep)         #corr. coeff. for Fe-I vs ep
+    fe1_vs_rew = np.corrcoef(star1_fe1, star1_fe1_rew)       #corr. coeff. for Fe-I vs rew
+    print fe1_vs_ep 
+    print fe1_vs_rew
+    
 
     # Is subprocess really needed to delete the files when the model is not a good
     # fit to the data?
