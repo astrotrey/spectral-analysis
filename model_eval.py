@@ -49,7 +49,11 @@ def read_datafile(data_filepath):
            ew.append(float(columns[4]))
            rew.append(float(columns[5]))
            logN.append(float(columns[6]))
-    
+        except IndexError:
+	   continue
+	except ValueError:
+           continue
+  
     return wave, elem_num, ep, ew, rew, logN
 
 def check_model(data1_filepath, data2_filepath, param_filepath):
