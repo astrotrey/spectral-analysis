@@ -15,8 +15,8 @@ from abd2latex import get_elem_name
 
 def get_params(param_filepath):
     """Extract the model's parameters from the parameter file."""
-    return (Teff, logg, feh, vmicro, atm_count, logfile, logfile2, logfile3,
-            datafile(?), model_filepath)
+    #return (Teff, logg, feh, vmicro, atm_count, logfile, logfile2, logfile3,
+    #        datafile(?), model_filepath)
 
 def read_datafile(data_filepath):
     """Extract the relevant data from a given star file.
@@ -44,7 +44,7 @@ def read_datafile(data_filepath):
         columns = line.split()
         try:
            wave.append(float(columns[0]))
-           elem_num.append(float(colums[1]))
+           elem_num.append(float(columns[1]))
            ep.append(float(columns[2]))
            ew.append(float(columns[4]))
            rew.append(float(columns[5]))
@@ -60,17 +60,13 @@ def check_model(data1_filepath, data2_filepath, param_filepath):
     """Determine if the model is a good fit to the data."""
      
     star1_wave, star1_elem_num, star1_ep, star1_ew, star1_rew, star1_logN =\
-                read_datafile(datat1_filepath)
+                read_datafile(data1_filepath)
     star2_wave, star2_elem_num, star2_ep, star2_ew, star2_rew, star2_logN =\
-                read_datafile(datat2_filepath)
-
-
-    # You only need one of these statements, not both. Pick one.
-    if len(star1_wave) != len(star2_wave):
-       print '\nERROR: The two input data files are not the same length!\n'
-       exit()
+                read_datafile(data2_filepath)
+    
     if star1_wave != star2_wave:
-       print '\nERROR! The spectral line data from the two input files are not identical\n'
+       print '\nERROR! The spectral line data from the two input files are not identical.\n'
+       print 'Check '+data1_filepath+' to '+data2_filepath+' make sure they are the correct files.\n'
        exit()
 
     # Use numpy to calculate the averages and correlation coefficients.
@@ -92,13 +88,14 @@ if __name__ == '__main__':
                          type=str,
                          help='Path of the param file for the model: '
                               'must contain Teff, logg, etc for the model.')
+    args = parser.parse_args()
     check_model(args.data1_filepath, args.data2_filepath, args.param_filepath)
 
 ################################################################################################
 ################################################################################################
 ################################################################################################
 
-
+"""
 #- Read value for ew_corr option
 #-
 ew_corr = int(sys.argv[3])
@@ -352,3 +349,4 @@ else:
         subprocess.Popen(args)
         #-deleting '*.abd,*.log,*.atm' for the given set of stellar parameters
         
+"""
