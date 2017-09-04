@@ -107,19 +107,37 @@ def check_model(data1_filepath, data2_filepath, param_filepath):
     star1_fe1 = np.subtract(star1_fe1_logN, star2_fe1_logN)  # Fe-I abundances of star1
                                                              #      relative to star2
     star1_fe1_avg = np.mean(star1_fe1)                       # Fe-I mean relative abundance
-    print star1_fe1
     print star1_fe1_avg
 
     star1_fe2 = np.subtract(star1_fe2_logN, star2_fe2_logN)  # Fe-II abundances of star1
                                                              #       relative to star2
     star1_fe2_avg = np.mean(star1_fe2)                       # Fe-II mean relative abundance
-    print star1_fe2
     print star1_fe2_avg
         
     fe1_vs_ep = np.corrcoef(star1_fe1, star1_fe1_ep)         #corr. coeff. for Fe-I vs ep
     fe1_vs_rew = np.corrcoef(star1_fe1, star1_fe1_rew)       #corr. coeff. for Fe-I vs rew
     print fe1_vs_ep 
     print fe1_vs_rew
+	
+    # Determine the difference in Fe-I and Fe-II means
+    # when they are rounded to the nearest hundredth.
+    fe1_trail = star1_fe1_avg*10**(3) % 10
+    if (fe1_trail >= 5):
+	fe1_round = star1_fe1_avg - fe1_trail*10**(-3) + 10**(-2)
+    else:
+	fe1_round = star1_fe1_avg - fe1_trail*10**(-3)
+	
+    fe2_trail = star1_fe2_avg*10**(3) % 10
+    if (fe2_trail >=5):
+	fe2_round = star1_fe2_avg - fe2_trail*10**(-3) + 10**(-2)
+    else:
+	fe2_round = star1_fe2_avg - fe2_trail*10**(-3)
+	
+    diff_fe = abs(fe1_round-fe2_round)
+    print fe1_round
+    print fe2_round
+    print diff_fe
+
     
 
     # Is subprocess really needed to delete the files when the model is not a good
