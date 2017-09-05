@@ -116,8 +116,8 @@ def check_model(data1_filepath, data2_filepath, param_filepath):
         
     fe1_vs_ep = np.corrcoef(star1_fe1, star1_fe1_ep)         #corr. coeff. for Fe-I vs ep
     fe1_vs_rew = np.corrcoef(star1_fe1, star1_fe1_rew)       #corr. coeff. for Fe-I vs rew
-    print fe1_vs_ep 
-    print fe1_vs_rew
+    print fe1_vs_ep[0][1]
+    print fe1_vs_rew[0][1]
 	
     # Determine the difference in Fe-I and Fe-II means
     # when they are rounded to the nearest hundredth.
@@ -138,7 +138,17 @@ def check_model(data1_filepath, data2_filepath, param_filepath):
     print fe2_round
     print diff_fe
 
-    
+    # Next need to record Teff, logg, ifeh, and vmic by printing to
+    # the logfiles.
+    # Also need to record star1_fe1_avg, star1_fe2_avg, fe1_vs_ep,
+    # and fe1_vs_rew for each set of parameters.
+
+    if ((diff_fe < 0.01) and (fe1_vs_ep[0][1] < 0.01) and (fe1_vs_rew[0][1] < 0.01)):
+         print "\n\nSolution Found!\n\n"
+    elif ((diff_fe < 0.02) and (fe1_vs_ep[0][1] < 0.01) and (fe1_vs_rew[0][1] < 0.01)):
+         print "\n\nNearly found a solution.\n\n"
+    else:
+         print "\n\nNo solution found.\n\n"
 
     # Is subprocess really needed to delete the files when the model is not a good
     # fit to the data?
@@ -187,7 +197,6 @@ fid1 = open(logfile2,'w')
 elem_strs = [0,0]
 elem_n_lines = [n_Fe1,n_Fe2]
 
-
               if (logfile2 != 'foo.log'):
 	          form='%7.2f  %9.2f %7.2f %7.2f %7.2f\n' 
 	          fid1.write(form % (lambda1,lambda2,logN1,logN2,star_Fe2))
@@ -199,32 +208,6 @@ if (logfile2 != 'foo.log'):
    form='|[FeI/H]-[FeII/H]| = %6.3f\n'
    fid1.write(form % (diff))
 
-#-Check if abs([Fe1/H] - [Fe2/H]) < 0.005
-#-when [Fe1/H] and [FeII/H] are rounded to
-#-the nearest hundredth
-#-
-digit3_Fe1 = star_Fe1_avg*10**(3) % 10
-digit3_Fe2 = star_Fe2_avg*10**(3) % 10
-Fe1 = star_Fe1_avg
-Fe2 = star_Fe2_avg
-
-#-If the value of the third decimal place is greater
-#-than or equal to five, then round up to the nearest hundredth
-#-(e.g., 0.345 -> 0.35)
-#-this way, (Fe1=0.345,Fe2=0.349) is a solution but
-#-(Fe1=0.344,Fe2=0.349) is not
-#-
-if (digit3_Fe1 >= 5):
-	Fe1 = star_Fe1_avg - digit3_Fe1*10**(-3) + 10**(-2)
-
-if (digit3_Fe2 >= 5):
-	Fe2 = star_Fe2_avg - digit3_Fe2*10**(-3) + 10**(-2)
-
-diff_Fe1Fe2 = Fe1 - Fe2
-
-#-Determine the correlations for
-#-[FeI/H] vs EP and [FeI/H] vs REW
-#-
 #-Also do EW vs EP if ew_corr==1
 #
 if ew_corr == 1:
